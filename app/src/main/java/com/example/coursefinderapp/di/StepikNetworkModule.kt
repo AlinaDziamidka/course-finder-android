@@ -1,0 +1,44 @@
+package com.example.coursefinderapp.di
+
+import com.example.coursefinderapp.data.remote.api.NetworkClientConfig.BASE_URL_STEPIK
+import com.example.coursefinderapp.data.remote.api.service.StepikApiService
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
+
+@Module
+@InstallIn(SingletonComponent::class)
+object StepikNetworkModule {
+
+    @Provides
+    @Named("StepikRetrofit")
+    fun provideStepikRetrofit(
+        @Named("StepikOkHttp") okHttpClient: OkHttpClient
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL_STEPIK)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
+    }
+
+    @Provides
+    @Named("StepikOkHttp")
+    fun provideStepikOkHttpClient(
+        interceptor: HttpLoggingInterceptor
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(interceptor)
+            .build()
+    }
+
+    @Provides
+    fun provideStepikApiService(@Named("StepikRetrofit") retrofit: Retrofit): StepikApiService =
+        retrofit.create(StepikApiService::class.java)
+}

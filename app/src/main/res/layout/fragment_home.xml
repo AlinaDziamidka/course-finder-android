@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+<LinearLayout
+    android:id="@+id/searchContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        app:queryHint="@string/home_search_hint"
+        app:iconifiedByDefault="false"
+        android:background="@drawable/bg_search_view"
+        app:queryBackground="@drawable/bg_search_view"
+        app:searchIcon="@drawable/ic_search" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/filterActionView"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/bg_circle_button"
+        app:icon="@drawable/ic_filter"
+        app:backgroundTint="@null"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"/>
+</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/filterViewContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:gravity="bottom">
+
+        <TextView
+            android:id="@+id/filterNameView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/home_filter_by_date"
+            style="@style/TextStyleButtonGreen"/>
+
+        <ImageView
+            android:id="@+id/filterView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/ic_filter_arrows"
+            app:backgroundTint="@null"
+            app:iconPadding="0dp" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/coursesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        tools:listitem="@layout/course_card" />
+</LinearLayout>

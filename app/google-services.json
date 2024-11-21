@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "335301577476",
+    "project_id": "coursefinderapp-71c18",
+    "storage_bucket": "coursefinderapp-71c18.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335301577476:android:72af6283df2e05621c1e51",
+        "android_client_info": {
+          "package_name": "com.example.coursefinderapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2iebULj9z2NjlrQ36vzcPNfogRQdvUqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

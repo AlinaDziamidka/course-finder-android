@@ -7,4 +7,19 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="color_primary">#151515</color>
+    <color name="green_color_button_default">#12B956</color>
+    <color name="green_color_button_pressed">#00A542</color>
+    <color name="glass_color">#4D32333A</color>
+    <color name="glass_color2">#80000000</color>
+    <color name="light_gray">#32333A</color>
+    <color name="hint_text_color">#80F2F2F3</color>
+    <color name="error_text_color_red">#FF4040</color>
+    <color name="grey_divider_color">#4D555E</color>
+    <color name="blue_color_vk_action">#2683ED</color>
+    <color name="blue_color_vk_action_pressed">#126FD9</color>
+    <color name="orange_color_ok_action">#F97305</color>
+    <color name="orange_color_ok_action_pressed">#E55F00</color>
+    <color name="dark_grey">#24252A</color>
+    <color name="grey_text_color">#B3F2F2F3</color>
 </resources>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextStyleHeadline">
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="TextStyleButton">
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="TextStyleButtonGreen" parent="TextStyleButton">
+        <item name="android:textColor">@color/green_color_button_default</item>
+    </style>
+
+    <style name="TextStyleTitleMedium">
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextStyleHint">
+        <item name="android:textColorHint">@color/hint_text_color</item>
+    </style>
+
+    <style name="TextStyleTextAppearance">
+        <item name="fontFamily">@font/roboto_medium</item>
+    </style>
+
+    <style name="TextStyleInvalidData">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/error_text_color_red</item>
+    </style>
+
+    <style name="TextStyleSmallButton">
+        <item name="fontFamily">@font/roboto_bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="TextStyleSmallButtonGreen" parent="TextStyleSmallButton">
+        <item name="android:textColor">@color/green_color_button_default</item>
+    </style>
+
+    <style name="TextStyleBodySmall">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/grey_text_color</item>
+    </style>
+
+    <style name="TextStyleCapture">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+</resources>

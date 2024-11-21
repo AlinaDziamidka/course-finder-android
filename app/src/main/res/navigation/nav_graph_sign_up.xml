@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/signUpViewFragment">
+
+    <fragment
+        android:id="@+id/signInView"
+        android:name="com.example.coursefinderapp.presentation.signin.SignInView"
+        android:label="SignInView" >
+        <action
+            android:id="@+id/action_signInView_to_signUpViewFragment"
+            app:destination="@id/signUpViewFragment" />
+        <action
+            android:id="@+id/action_signInView_to_homeView2"
+            app:destination="@id/homeView" />
+        <action
+            android:id="@+id/action_signInView_to_homeView"
+            app:destination="@id/homeView" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpViewFragment"
+        android:name="com.example.coursefinderapp.presentation.signup.SignUpViewFragment"
+        android:label="SignUpViewFragment" >
+        <action
+            android:id="@+id/action_signUpViewFragment_to_signInView"
+            app:destination="@id/signInView" />
+        <action
+            android:id="@+id/action_signUpViewFragment_to_homeView"
+            app:destination="@id/homeView" />
+    </fragment>
+    <activity
+        android:id="@+id/homeView"
+        android:name="com.example.coursefinderapp.presentation.home.HomeView"
+        android:label="HomeView" />
+</navigation>
