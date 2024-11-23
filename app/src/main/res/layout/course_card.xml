@@ -15,6 +15,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/addToFavoriteActionView"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_margin="8dp"

@@ -1,6 +1,7 @@
 package com.example.coursefinderapp.di
 
 import com.example.coursefinderapp.data.remote.api.NetworkClientConfig.BASE_URL_STEPIK
+import com.example.coursefinderapp.data.remote.api.service.CourseApiService
 import com.example.coursefinderapp.data.remote.api.service.StepikApiService
 import dagger.Module
 import dagger.Provides
@@ -41,4 +42,8 @@ object StepikNetworkModule {
     @Provides
     fun provideStepikApiService(@Named("StepikRetrofit") retrofit: Retrofit): StepikApiService =
         retrofit.create(StepikApiService::class.java)
+
+    @Provides
+    fun provideCourseApiService(@Named("StepikRetrofit") retrofit: Retrofit): CourseApiService =
+        retrofit.create(CourseApiService::class.java)
 }

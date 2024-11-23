@@ -1,9 +1,12 @@
 package com.example.coursefinderapp.di
 
+import com.example.coursefinderapp.data.remote.api.service.CourseApiService
 import com.example.coursefinderapp.data.remote.api.service.StepikApiService
 import com.example.coursefinderapp.data.remote.prefs.PrefsDataSource
+import com.example.coursefinderapp.data.remote.repository.CourseRemoteRepositoryImpl
 import com.example.coursefinderapp.data.remote.repository.SessionRepositoryImpl
 import com.example.coursefinderapp.data.remote.repository.StepikAuthRepositoryImpl
+import com.example.coursefinderapp.domain.repository.remote.CourseRemoteRepository
 import com.example.coursefinderapp.domain.repository.remote.SessionRepository
 import com.example.coursefinderapp.domain.repository.remote.StepikAuthRepository
 import dagger.Binds
@@ -29,6 +32,14 @@ object RepositoryModule {
         return StepikAuthRepositoryImpl(prefsDataSource, stepikApiService)
     }
 
+    @Provides
+    @Singleton
+    fun provideCourseRemoteRepository(
+        courseApiService: CourseApiService,
+        prefsDataSource: PrefsDataSource
+    ): CourseRemoteRepository {
+        return CourseRemoteRepositoryImpl(courseApiService, prefsDataSource)
+    }
 }
 
 @Module

@@ -6,6 +6,7 @@ import com.example.coursefinderapp.data.remote.api.service.StepikApiService
 import com.example.coursefinderapp.data.remote.prefs.PrefsDataSource
 import com.example.coursefinderapp.domain.repository.remote.StepikAuthRepository
 import com.example.coursefinderapp.domain.util.Event
+import doCall
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.Credentials
@@ -18,19 +19,26 @@ class StepikAuthRepositoryImpl @Inject constructor(
 
     override suspend fun getStepikToken(): Event<String> {
         val credentials = Credentials.basic(CLIENT_ID_STEPIK, CLIENT_SECRET_STEPIK)
-        val response = stepikApiService.getToken(credentials)
+        val event = doCall { return@doCall stepikApiService.getToken(credentials) }
 
-        return if (response.isSuccessful) {
-            val token = response.body()?.accessToken
-            if (token != null) {
-                Event.Success(token)
-            } else {
-                Event.Failure("Token is null")
+        return when (event) {
+            is Event.Success -> {
+                val response = event.data
+                val token = response.accessToken
+                if (!token.isNullOrEmpty()) {
+                    Event.Success(token)
+                } else {
+                    Event.Failure("Token is null")
+                }
             }
-        } else {
-            Event.Failure("Failed to get token: ${response.message()}")
+
+            is Event.Failure -> {
+                val error = event.exception
+                Event.Failure(error)
+            }
         }
     }
+
 
     override suspend fun fetchStepikToken(): Flow<String?> = flow {
         val token = prefsDataSource.fetchStepikToken()

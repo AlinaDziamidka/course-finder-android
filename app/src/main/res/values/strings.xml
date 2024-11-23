@@ -46,4 +46,7 @@
     <string name="home_search_hint">Search courses...</string>
     <string name="home_filter_by_date">По дате добавления</string>
     <string name="home_details">Подробнее</string>
+    <string name="home_course_price">%1$s  ₽</string>
+    <string name="home_course_price_free">Бесплатно</string>
+    <string name="home_no_rating">Нет рейтинга</string>
 </resources>
