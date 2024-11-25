@@ -5,26 +5,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.paging.LoadStateAdapter
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coursefinderapp.R
 import com.example.coursefinderapp.databinding.FragmentHomeBinding
 import com.example.coursefinderapp.domain.entity.Course
-import com.example.coursefinderapp.domain.entity.StepikMeta
+import com.example.coursefinderapp.domain.entity.Filters
+import com.example.coursefinderapp.domain.entity.SortOrder
 import com.example.coursefinderapp.presentation.home.adapter.CourseLoadStateAdapter
 import com.example.coursefinderapp.presentation.home.adapter.CoursesAdapter
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -36,7 +37,7 @@ class HomeViewFragment : Fragment() {
     private lateinit var adapter: CoursesAdapter
     private lateinit var coursesView: RecyclerView
     private lateinit var filterActin: MaterialButton
-    private lateinit var selectedFilter: LinearLayout
+    private lateinit var sortAction: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,12 +56,32 @@ class HomeViewFragment : Fragment() {
         initAdapter()
         setUpCourses()
         observeCourses()
+        setUpSortAction()
+        setUpFilterAction()
     }
 
     private fun initViews() {
         coursesView = binding.coursesRecyclerView
         filterActin = binding.filterActionView
-        selectedFilter = binding.filterViewContainer
+        sortAction = binding.sortNameView
+    }
+
+    private fun initAdapter() {
+        val layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        coursesView.layoutManager = layoutManager
+
+        adapter = CoursesAdapter(requireContext(),
+            { course ->
+                onDescriptionClick(course)
+            },
+            { course ->
+                onFavoriteClick(course)
+            })
+        coursesView.adapter = adapter
+
+        binding.coursesRecyclerView.adapter = adapter.withLoadStateFooter(
+            footer = CourseLoadStateAdapter { adapter.retry() })
     }
 
     private fun setUpCourses() {
@@ -70,7 +91,7 @@ class HomeViewFragment : Fragment() {
     private fun observeCourses() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.viewState.collect {
+                viewModel.viewState.collectLatest {
                     when (it) {
                         is HomeViewState.Success -> {
                             Log.d(OBSERVE, "Success to fetch courses: ${it.data}")
@@ -92,8 +113,108 @@ class HomeViewFragment : Fragment() {
     }
 
     private suspend fun handleOnSuccess(courses: PagingData<Course>) {
+        Log.d("Adapter", "Submitting data to adapter: $courses")
+
         adapter.submitData(courses)
     }
+
+    private fun setUpSortAction() {
+        sortAction.setOnClickListener {
+            showSortMenu(it)
+        }
+    }
+
+    private fun showSortMenu(view: View) {
+        val sortMenu = PopupMenu(requireContext(), view)
+        sortMenu.inflate(R.menu.sort_menu)
+
+        sortMenu.setOnMenuItemClickListener { menuItem ->
+            Log.d("PopupMenu", "Menu item clicked: ${menuItem.title}")
+            when (menuItem.itemId) {
+                R.id.sortByDate -> {
+                    viewModel.updateSortOrder(SortOrder.BY_DATE)
+                    sortAction.text = getString(R.string.home_sort_menu_by_date)
+                    true
+                }
+
+                R.id.sortByPopular -> {
+                    viewModel.updateSortOrder(SortOrder.BY_POPULARITY)
+                    sortAction.text = getString(R.string.home_sort_menu_by_popular)
+                    true
+                }
+
+                R.id.sortByRating -> {
+                    viewModel.updateSortOrder(SortOrder.BY_RATING)
+                    sortAction.text = getString(R.string.home_sort_menu_by_rating)
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        sortMenu.show()
+    }
+
+    private fun setUpFilterAction() {
+        filterActin.setOnClickListener {
+            showFilterMenu(it)
+        }
+    }
+
+    private fun showFilterMenu(view: View) {
+        val filterMenu = PopupMenu(requireContext(), view)
+        filterMenu.inflate(R.menu.filter_menu)
+
+        filterMenu.setOnMenuItemClickListener { menuItem ->
+            Log.d("PopupMenu", "Menu item clicked: ${menuItem.title}")
+            when (menuItem.itemId) {
+                R.id.price -> { true }
+
+                R.id.free -> {
+                    viewModel.updateFilter(Filters.Price(Filters.Price.Type.FREE))
+                    true
+                }
+
+                R.id.paid -> {
+                    viewModel.updateFilter(Filters.Price(Filters.Price.Type.PAID))
+                    true
+                }
+
+                R.id.category -> { true }
+
+                R.id.python -> {
+                    viewModel.updateFilter(Filters.Category(Filters.Category.Type.PYTHON))
+                    true
+                }
+
+                R.id.cSharp -> {
+                    viewModel.updateFilter(Filters.Category(Filters.Category.Type.C_SHARP))
+                    true
+                }
+
+                R.id.c -> {
+                    viewModel.updateFilter(Filters.Category(Filters.Category.Type.C))
+                    true
+                }
+
+                R.id.java -> {
+                    viewModel.updateFilter(Filters.Category(Filters.Category.Type.JAVA))
+                    true
+                }
+
+                R.id.kotlin -> {
+                    viewModel.updateFilter(Filters.Category(Filters.Category.Type.KOTLIN))
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        filterMenu.show()
+    }
+
 
     private fun onDescriptionClick(course: Course) {
         Toast.makeText(requireContext(), "Описание курса: ${course.title}", Toast.LENGTH_SHORT)
@@ -106,24 +227,6 @@ class HomeViewFragment : Fragment() {
             "Добавить в избранное: ${course.title}",
             Toast.LENGTH_SHORT
         ).show()
-    }
-
-    private fun initAdapter() {
-        val layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        coursesView.layoutManager = layoutManager
-
-        adapter = CoursesAdapter(requireContext(),
-            { course ->
-                onDescriptionClick(course)
-            },
-            { course ->
-                onFavoriteClick(course)
-            })
-        coursesView.adapter = adapter
-
-        binding.coursesRecyclerView.adapter = adapter.withLoadStateFooter(
-            footer = CourseLoadStateAdapter { adapter.retry() })
     }
 
     override fun onDestroyView() {

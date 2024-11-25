@@ -9,7 +9,6 @@ import com.example.coursefinderapp.domain.entity.StepikMeta
 class CourseTransformer {
 
     fun fromResponse(response: StepikCourseResponse): Pair<StepikMeta, List<Course>> {
-        Log.d("CourseTransformer", "Number of courses in response: ${response.courses.size}")
         val stepikMeta = StepikMeta(
             page = response.meta.page,
             hasNext = response.meta.hasNext,
@@ -17,15 +16,17 @@ class CourseTransformer {
         )
 
         val courses = response.courses.map { course ->
-            Log.d("CourseTransformer", "Processing course: ${course.id}, Title: ${course.title}")
             Course(
                 id = course.id,
                 title = course.title,
                 summary = course.summary,
                 description = course.description,
-                rating = course.rating,
+                rating = null,
+                reviewSummaryId = course.reviewSummary,
                 createDate = course.createDate,
                 price = course.price,
+                tags = course.tags,
+                isPopular = course.isPopular,
                 coverImage = course.coverImage,
                 sections = course.sections,
                 authors = course.authors

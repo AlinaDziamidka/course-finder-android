@@ -7,3 +7,4 @@ import javax.inject.Inject
 class FetchSessionUseCase @Inject constructor(private val sessionRepository: SessionRepository) {
     suspend operator fun invoke(): Flow<String?> = sessionRepository.fetchToken()
 }
+

@@ -5,14 +5,21 @@
     android:id="@+id/rootContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
     android:background="@drawable/bg_course_card"
-    android:orientation="vertical"
-    android:layout_marginBottom="16dp">
+    android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/courseImageContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/courseImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/course_image_placeholder"
+                android:clipToOutline="true"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/addToFavoriteActionView"
@@ -26,12 +33,6 @@
             app:iconPadding="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/courseImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/course_image_placeholder" />
 
         <LinearLayout
             android:id="@+id/courseInfoContainer"

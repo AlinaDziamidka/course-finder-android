@@ -43,10 +43,24 @@
     <string name="home_bottom_nav_home">Главная</string>
     <string name="home_bottom_nav_favorites">Избранное</string>
     <string name="home_bottom_nav_account">Аккаунт</string>
+    <string name="home_sort_menu_by_date">По дате добавления</string>
+    <string name="home_sort_menu_by_popular">По популярности</string>
+    <string name="home_sort_menu_by_rating">По рейтингу</string>
+    <string name="home_filter_menu_category">По категории</string>
+    <string name="home_filter_price">По цене</string>
+    <string name="home_filter_submenu_free">Бесплатно</string>
+    <string name="home_filter_submenu_paid">Платно</string>
+    <string name="home_filter_submenu_python">Python</string>
+    <string name="home_filter_submenu_c_sharp">C#</string>
+    <string name="home_filter_submenu_c">C/C++</string>
+    <string name="home_filter_submenu_java">Java</string>
+    <string name="home_filter_submenu_kotlin">Kotlin</string>
     <string name="home_search_hint">Search courses...</string>
     <string name="home_filter_by_date">По дате добавления</string>
     <string name="home_details">Подробнее</string>
     <string name="home_course_price">%1$s  ₽</string>
     <string name="home_course_price_free">Бесплатно</string>
     <string name="home_no_rating">Нет рейтинга</string>
+    <string name="load_state_footer_error">Произошла ошибка</string>
+    <string name="load_state_footer_retry">Повторить</string>
 </resources>

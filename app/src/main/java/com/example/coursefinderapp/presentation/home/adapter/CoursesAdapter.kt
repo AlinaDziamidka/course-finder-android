@@ -4,14 +4,17 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.coursefinderapp.R
 import com.example.coursefinderapp.databinding.CourseCardBinding
 import com.example.coursefinderapp.domain.entity.Course
+import com.example.coursefinderapp.util.image.CropTopTransformation
 import com.google.android.material.button.MaterialButton
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -45,6 +48,7 @@ class CoursesAdapter(
         private lateinit var ratingView: TextView
         private lateinit var courseDateView: TextView
         private lateinit var courseNameView: TextView
+        private lateinit var courseImageView: ImageView
         private lateinit var courseSummaryView: TextView
         private lateinit var priceView: TextView
         private lateinit var moveToDescriptionView: LinearLayout
@@ -58,43 +62,24 @@ class CoursesAdapter(
             ratingView = binding.ratingView
             courseDateView = binding.courseDateView
             courseNameView = binding.courseNameView
+            courseImageView = binding.courseImageView
             courseSummaryView = binding.courseDescriptionView
             priceView = binding.priceView
             moveToDescriptionView = binding.moreActionView
         }
 
         fun onBind(course: Course, context: Context) {
-
-
-            val rating = if (course.rating == null) {
-                context.getString(R.string.home_no_rating)
-            } else {
-                course.rating.toString()
-            }
-            ratingView.text = rating
-
-
             courseNameView.text = course.title
             courseSummaryView.text = course.summary
+            setCreationDate(course)
+            setPrice(course, context)
+            setRating(course, context)
+            setImage(context, course)
+            setOnFavoriteAction(course)
+            setOnMoveToDescriptionAction(course)
+        }
 
-            val price = if (course.price.isNullOrEmpty()) {
-                context.getString(R.string.home_course_price_free)
-            } else {
-                val formattedPrice =
-                    course.price.toDoubleOrNull()?.toInt()?.toString() ?: course.price
-                context.getString(R.string.home_course_price, formattedPrice)
-            }
-            priceView.text = price
-
-
-            addToFavoriteActionView.setOnClickListener {
-                onFavoriteClickListener(course)
-            }
-
-            moveToDescriptionView.setOnClickListener {
-                onDescriptionClickListener(course)
-            }
-
+        private fun setCreationDate(course: Course) {
             if (course.createDate.isNullOrEmpty()) {
                 courseDateView.visibility = View.GONE
             } else {
@@ -102,7 +87,6 @@ class CoursesAdapter(
                 val formattedDate = formatDate(course.createDate)
                 courseDateView.text = formattedDate
             }
-
         }
 
         private fun formatDate(dateString: String): String {
@@ -112,7 +96,57 @@ class CoursesAdapter(
                 val date = inputFormat.parse(dateString)
                 outputFormat.format(date ?: Date())
             } catch (e: Exception) {
-                "Некорректная дата"
+                "Invalid date"
+            }
+        }
+
+        private fun setPrice(
+            course: Course,
+            context: Context
+        ) {
+            val price = if (course.price.isNullOrEmpty()) {
+                context.getString(R.string.home_course_price_free)
+            } else {
+                val formattedPrice =
+                    course.price.toDoubleOrNull()?.toInt()?.toString() ?: course.price
+                context.getString(R.string.home_course_price, formattedPrice)
+            }
+            priceView.text = price
+        }
+
+        private fun setRating(
+            course: Course,
+            context: Context
+        ) {
+            val rating = if (course.rating?.compareTo(0.0f) == 0) {
+                context.getString(R.string.home_no_rating)
+            } else {
+                String.format(Locale.US, "%.1f", course.rating)
+            }
+            ratingView.text = rating
+        }
+
+        private fun setImage(
+            context: Context,
+            course: Course
+        ) {
+            Glide.with(context)
+                .load(course.coverImage)
+                .placeholder(R.drawable.course_image_placeholder)
+                .error(R.drawable.error_course_image_placeholder)
+                .transform(CropTopTransformation())
+                .into(courseImageView)
+        }
+
+        private fun setOnFavoriteAction(course: Course) {
+            addToFavoriteActionView.setOnClickListener {
+                onFavoriteClickListener(course)
+            }
+        }
+
+        private fun setOnMoveToDescriptionAction(course: Course) {
+            moveToDescriptionView.setOnClickListener {
+                onDescriptionClickListener(course)
             }
         }
     }
@@ -130,5 +164,4 @@ class CoursesAdapter(
             holder.onBind(course, context)
         }
     }
-
 }

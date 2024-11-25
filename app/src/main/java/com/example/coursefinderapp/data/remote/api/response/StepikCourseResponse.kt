@@ -19,13 +19,17 @@ data class CourseResponse(
     val summary: String?,
     @SerializedName("description")
     val description: String?,
-    @SerializedName("rating")
-    val rating: Float?,
     @SerializedName("create_date")
     val createDate: String?,
     @SerializedName("price")
     val price: String?,
-    @SerializedName("cover_image")
+    @SerializedName("tags")
+    val tags: List<Int>,
+    @SerializedName("is_popular")
+    val isPopular: Boolean,
+    @SerializedName("review_summary")
+    val reviewSummary: Int?,
+    @SerializedName("cover")
     val coverImage: String?,
     @SerializedName("sections")
     val sections: List<Int>,

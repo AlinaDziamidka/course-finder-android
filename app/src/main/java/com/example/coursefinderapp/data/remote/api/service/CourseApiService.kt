@@ -1,9 +1,11 @@
 package com.example.coursefinderapp.data.remote.api.service
 
+import com.example.coursefinderapp.data.remote.api.response.CourseReviewSummaryResponse
 import com.example.coursefinderapp.data.remote.api.response.StepikCourseResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CourseApiService {
@@ -16,6 +18,9 @@ interface CourseApiService {
         @Query("language") language: String? = null
     ): Response<StepikCourseResponse>
 
-
-
-}
+        @GET("api/course-review-summaries/{id}")
+        suspend fun getCourseReviewSummary(
+            @Path("id") reviewSummaryId: Int,
+            @Header("Authorization") token: String
+        ): Response<CourseReviewSummaryResponse>
+    }
