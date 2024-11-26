@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,11 +22,13 @@ import com.example.coursefinderapp.databinding.FragmentHomeBinding
 import com.example.coursefinderapp.domain.entity.Course
 import com.example.coursefinderapp.domain.entity.Filters
 import com.example.coursefinderapp.domain.entity.SortOrder
+import com.example.coursefinderapp.domain.util.DataSource
 import com.example.coursefinderapp.presentation.home.adapter.CourseLoadStateAdapter
 import com.example.coursefinderapp.presentation.home.adapter.CoursesAdapter
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -54,7 +57,6 @@ class HomeViewFragment : Fragment() {
 
         initViews()
         initAdapter()
-        setUpCourses()
         observeCourses()
         setUpSortAction()
         setUpFilterAction()
@@ -84,18 +86,16 @@ class HomeViewFragment : Fragment() {
             footer = CourseLoadStateAdapter { adapter.retry() })
     }
 
-    private fun setUpCourses() {
-        viewModel.fetchPagedCourses()
-    }
-
     private fun observeCourses() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.viewState.collectLatest {
-                    when (it) {
+                combine(viewModel.pagedCoursesFlow, viewModel.viewState) { pagingData, state ->
+                    Pair(pagingData, state)
+                }.collectLatest { (pagingData, state) ->
+                    handleOnSuccess(pagingData)
+                    when (state) {
                         is HomeViewState.Success -> {
-                            Log.d(OBSERVE, "Success to fetch courses: ${it.data}")
-                            handleOnSuccess(it.data)
+                            Log.d(OBSERVE, "Success to fetch courses: ${state.data}")
                         }
 
                         is HomeViewState.Loading -> {
@@ -103,18 +103,15 @@ class HomeViewFragment : Fragment() {
                         }
 
                         is HomeViewState.Failure -> {
-                            Log.d(OBSERVE, "Failed to fetch courses: ${it.message}")
+                            Log.d(OBSERVE, "Failed to fetch courses: ${state.message}")
                         }
                     }
-
                 }
             }
         }
     }
 
     private suspend fun handleOnSuccess(courses: PagingData<Course>) {
-        Log.d("Adapter", "Submitting data to adapter: $courses")
-
         adapter.submitData(courses)
     }
 
@@ -129,7 +126,6 @@ class HomeViewFragment : Fragment() {
         sortMenu.inflate(R.menu.sort_menu)
 
         sortMenu.setOnMenuItemClickListener { menuItem ->
-            Log.d("PopupMenu", "Menu item clicked: ${menuItem.title}")
             when (menuItem.itemId) {
                 R.id.sortByDate -> {
                     viewModel.updateSortOrder(SortOrder.BY_DATE)
@@ -167,9 +163,10 @@ class HomeViewFragment : Fragment() {
         filterMenu.inflate(R.menu.filter_menu)
 
         filterMenu.setOnMenuItemClickListener { menuItem ->
-            Log.d("PopupMenu", "Menu item clicked: ${menuItem.title}")
             when (menuItem.itemId) {
-                R.id.price -> { true }
+                R.id.price -> {
+                    true
+                }
 
                 R.id.free -> {
                     viewModel.updateFilter(Filters.Price(Filters.Price.Type.FREE))
@@ -181,7 +178,9 @@ class HomeViewFragment : Fragment() {
                     true
                 }
 
-                R.id.category -> { true }
+                R.id.category -> {
+                    true
+                }
 
                 R.id.python -> {
                     viewModel.updateFilter(Filters.Category(Filters.Category.Type.PYTHON))
@@ -215,18 +214,18 @@ class HomeViewFragment : Fragment() {
         filterMenu.show()
     }
 
-
     private fun onDescriptionClick(course: Course) {
-        Toast.makeText(requireContext(), "Описание курса: ${course.title}", Toast.LENGTH_SHORT)
-            .show()
+        viewModel.saveCourseToCache(course)
+        val action =
+            HomeViewFragmentDirections.actionHomeViewFragmentToCourseDetailsView(
+                course.id,
+                DataSource.CACHE.stringValue
+            )
+        findNavController().navigate(action)
     }
 
     private fun onFavoriteClick(course: Course) {
-        Toast.makeText(
-            requireContext(),
-            "Добавить в избранное: ${course.title}",
-            Toast.LENGTH_SHORT
-        ).show()
+        viewModel.saveCourseToFavorite(course)
     }
 
     override fun onDestroyView() {
@@ -235,7 +234,7 @@ class HomeViewFragment : Fragment() {
     }
 
     companion object {
-        const val TAG = "HomeViewFragment"
+        private const val TAG = "HomeViewFragment"
         const val OBSERVE = "coursesObserver"
     }
 }

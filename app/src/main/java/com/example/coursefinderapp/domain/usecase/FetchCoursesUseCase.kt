@@ -1,6 +1,5 @@
 package com.example.coursefinderapp.domain.usecase
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -22,14 +21,12 @@ class FetchCoursesUseCase @Inject constructor(
     )
 
     override suspend fun invoke(params: Params): Flow<PagingData<Course>> {
-        Log.d("FetchCoursesUseCase", "startInvoke: ${params.sortOrder}, ${params.filter}")
         return Pager(
             config = PagingConfig(
                 pageSize = 10,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                Log.d("PagingSourceFactory", "Creating new PagingSource for sortOrder: ${params.sortOrder}")
                 courseRemoteRepository.getCourses(params.sortOrder, params.filter)
             }
         ).flow

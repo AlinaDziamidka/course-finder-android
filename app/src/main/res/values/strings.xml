@@ -63,4 +63,9 @@
     <string name="home_no_rating">Нет рейтинга</string>
     <string name="load_state_footer_error">Произошла ошибка</string>
     <string name="load_state_footer_retry">Повторить</string>
+    <string name="course_details_author">Автор</string>
+    <string name="course_details_start_course">Начать крус</string>
+    <string name="course_details_to_platform">Перейти на платформу</string>
+    <string name="course_details_about_course">О курсе</string>
+    <string name="favorite_header">Избранное</string>
 </resources>

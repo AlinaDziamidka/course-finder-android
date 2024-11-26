@@ -10,11 +10,17 @@ import com.example.coursefinderapp.domain.entity.Course
 import com.example.coursefinderapp.domain.entity.Filters
 import com.example.coursefinderapp.domain.entity.SortOrder
 import com.example.coursefinderapp.domain.usecase.FetchCoursesUseCase
+import com.example.coursefinderapp.domain.usecase.SaveCourseToCacheUseCase
+import com.example.coursefinderapp.domain.usecase.SaveFavoriteCourseUseCase
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,11 +28,10 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     context: Application,
-    private val fetchCoursesUseCase: FetchCoursesUseCase
+    private val fetchCoursesUseCase: FetchCoursesUseCase,
+    private val saveCourseToCacheUseCase: SaveCourseToCacheUseCase,
+    private val saveFavoriteCourseUseCase: SaveFavoriteCourseUseCase
 ) : AndroidViewModel(context) {
-
-    private val _pagedCoursesFlow = MutableStateFlow<PagingData<Course>>(PagingData.empty())
-    val pagedCoursesFlow: StateFlow<PagingData<Course>> get() = _pagedCoursesFlow
 
     private val _viewState =
         MutableStateFlow<HomeViewState<PagingData<Course>>>(HomeViewState.Loading)
@@ -39,32 +44,62 @@ class HomeViewModel @Inject constructor(
     val filter: StateFlow<Filters> = _filter
 
     fun updateSortOrder(order: SortOrder) {
-        Log.d("HomeViewModel", "Updating sort order to $order")
         _sortOrder.value = order
-        fetchPagedCourses()
     }
 
     fun updateFilter(filter: Filters) {
-        Log.d("HomeViewModel", "Updating filter to $filter")
         _filter.value = filter
-        fetchPagedCourses()
     }
 
-    fun fetchPagedCourses() {
-        viewModelScope.launch {
-            Log.d("HomeViewModel", "fetchPagedCourses order: $_sortOrder.value")
-            fetchCoursesUseCase.invoke(FetchCoursesUseCase.Params(_sortOrder.value, _filter.value))
-                .onStart {
-                    _viewState.value = HomeViewState.Loading
-                }
-                .catch { exception ->
-                    _viewState.value =
-                        HomeViewState.Failure(exception.message ?: "Something went wrong")
-                }
-                .collect { pagingData ->
-                    _viewState.value = HomeViewState.Success(pagingData)
-                    _pagedCoursesFlow.value = pagingData
-                }
+    val pagedCoursesFlow: Flow<PagingData<Course>> =
+        combine(_sortOrder, _filter) { sortOrder, filter ->
+            FetchCoursesUseCase.Params(sortOrder, filter)
         }
+            .flatMapLatest { params ->
+                fetchCoursesUseCase.invoke(params)
+                    .onStart {
+                        _viewState.value = HomeViewState.Loading
+                    }
+                    .catch { exception ->
+                        _viewState.value =
+                            HomeViewState.Failure(exception.message ?: "Something went wrong")
+                        emit(PagingData.empty())
+                    }
+            }
+            .onEach { pagingData ->
+                _viewState.value = HomeViewState.Success(pagingData)
+            }
+            .cachedIn(viewModelScope)
+
+    fun saveCourseToCache(course: Course) {
+        viewModelScope.launch {
+            runCatching {
+                saveCourseToCacheUseCase(
+                    SaveCourseToCacheUseCase.Params(course)
+                )
+            }.onSuccess {
+                Log.d(TAG, "Course saved to cache successfully")
+            }.onFailure { e ->
+                Log.e(TAG, "Error saving course to cache: ${e.message}")
+            }
+        }
+    }
+
+    fun saveCourseToFavorite(course: Course) {
+        viewModelScope.launch {
+            runCatching {
+                saveFavoriteCourseUseCase(
+                    SaveFavoriteCourseUseCase.Params(course)
+                )
+            }.onSuccess {
+                Log.d(TAG, "Course added to favorite successfully")
+            }.onFailure { e ->
+                Log.e(TAG, "Error saving course to favorite: ${e.message}")
+            }
+        }
+    }
+
+    companion object {
+       private const val TAG = "HomeViewModel"
     }
 }

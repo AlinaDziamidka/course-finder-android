@@ -1,9 +1,7 @@
 package com.example.coursefinderapp.data.remote.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.coursefinderapp.data.remote.api.response.CourseReviewSummaryResponse
 import com.example.coursefinderapp.data.remote.api.service.CourseApiService
 import com.example.coursefinderapp.data.remote.prefs.PrefsDataSource
 import com.example.coursefinderapp.data.remote.transformer.CourseTransformer
@@ -17,6 +15,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
+import java.net.SocketTimeoutException
 
 class CoursesPagingSource(
     private val courseApiService: CourseApiService,
@@ -27,54 +26,57 @@ class CoursesPagingSource(
 
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Course> {
-        Log.d("CoursesPagingSource", "Loading page with sortOrder = $sortOrder")
         val currentPage = params.key ?: 1
         val token = withContext(Dispatchers.IO) {
             prefsDataSource.fetchStepikToken()
         } ?: throw Exception("Token is null")
 
-        val event = doCall {
-            return@doCall courseApiService.getCourses(
-                token = token,
-                page = currentPage,
-                tag = COURSE_TAG,
-                language = COURSE_LANGUAGE
-            )
-        }
-
-        return when (event) {
-            is Event.Success -> {
-                val response = event.data
-                val transformer = CourseTransformer()
-                val metaAndCourses = transformer.fromResponse(response)
-
-                val coursesWithRatings = coroutineScope {
-                    metaAndCourses.second.map { course ->
-                        async {
-                            if (course.reviewSummaryId != null) {
-                                val reviewSummary =
-                                    getCourseReviewSummary(course.reviewSummaryId, token)
-                                course.copy(rating = reviewSummary)
-                            } else {
-                                course.copy(rating = null)
-                            }
-                        }
-                    }.awaitAll()
-                }
-
-                val sortedCourses = sortCourses(coursesWithRatings, sortOrder)
-                val sortedAndFilteredCourses = filterCourses(sortedCourses, filter)
-
-                LoadResult.Page(
-                    data = sortedAndFilteredCourses,
-                    prevKey = if (currentPage == 1) null else currentPage - 1,
-                    nextKey = if (metaAndCourses.first.hasNext) currentPage + 1 else null
+        return try {
+            val event = doCall {
+                return@doCall courseApiService.getCourses(
+                    token = token,
+                    page = currentPage,
+                    tag = COURSE_TAG,
+                    language = COURSE_LANGUAGE
                 )
             }
 
-            is Event.Failure -> {
-                LoadResult.Error(Exception(event.exception))
+            when (event) {
+                is Event.Success -> {
+                    val response = event.data
+                    val transformer = CourseTransformer()
+                    val metaAndCourses = transformer.fromResponse(response)
+
+                    val coursesWithRatings = coroutineScope {
+                        metaAndCourses.second.map { course ->
+                            async {
+                                if (course.reviewSummaryId != null) {
+                                    val reviewSummary =
+                                        getCourseReviewSummary(course.reviewSummaryId, token)
+                                    course.copy(rating = reviewSummary)
+                                } else {
+                                    course.copy(rating = null)
+                                }
+                            }
+                        }.awaitAll()
+                    }
+
+                    val sortedCourses = sortCourses(coursesWithRatings, sortOrder)
+                    val sortedAndFilteredCourses = filterCourses(sortedCourses, filter)
+
+                    LoadResult.Page(
+                        data = sortedAndFilteredCourses,
+                        prevKey = if (currentPage == 1) null else currentPage - 1,
+                        nextKey = if (metaAndCourses.first.hasNext) currentPage + 1 else null
+                    )
+                }
+
+                is Event.Failure -> {
+                    LoadResult.Error(Exception(event.exception))
+                }
             }
+        } catch (e: SocketTimeoutException) {
+            LoadResult.Error(e)
         }
     }
 

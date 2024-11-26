@@ -1,14 +1,12 @@
 package com.example.coursefinderapp.data.remote.transformer
 
-import android.util.Log
-import com.example.coursefinderapp.data.remote.api.response.StepikCourseResponse
-import com.example.coursefinderapp.domain.entity.Author
+import com.example.coursefinderapp.data.remote.api.response.CourseAndMetaResponse
 import com.example.coursefinderapp.domain.entity.Course
 import com.example.coursefinderapp.domain.entity.StepikMeta
 
 class CourseTransformer {
 
-    fun fromResponse(response: StepikCourseResponse): Pair<StepikMeta, List<Course>> {
+    fun fromResponse(response: CourseAndMetaResponse): Pair<StepikMeta, List<Course>> {
         val stepikMeta = StepikMeta(
             page = response.meta.page,
             hasNext = response.meta.hasNext,
@@ -27,8 +25,8 @@ class CourseTransformer {
                 price = course.price,
                 tags = course.tags,
                 isPopular = course.isPopular,
+                courseUrl = course.courseUrl,
                 coverImage = course.coverImage,
-                sections = course.sections,
                 authors = course.authors
             )
         }

@@ -140,6 +140,8 @@ class CoursesAdapter(
 
         private fun setOnFavoriteAction(course: Course) {
             addToFavoriteActionView.setOnClickListener {
+                addToFavoriteActionView.setIconResource(R.drawable.ic_favorite_selected)
+                addToFavoriteActionView.setIconTintResource(R.color.green_color_button_default)
                 onFavoriteClickListener(course)
             }
         }

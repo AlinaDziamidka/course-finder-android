@@ -7,5 +7,27 @@
     <fragment
         android:id="@+id/homeViewFragment"
         android:name="com.example.coursefinderapp.presentation.home.HomeViewFragment"
-        android:label="HomeViewFragment" />
+        android:label="HomeViewFragment" >
+        <action
+            android:id="@+id/action_homeViewFragment_to_courseDetailsView"
+            app:destination="@id/courseDetailsView" />
+        <action
+            android:id="@+id/action_homeViewFragment_to_favoriteView"
+            app:destination="@id/favoriteView" />
+    </fragment>
+    <fragment
+        android:id="@+id/courseDetailsView"
+        android:name="com.example.coursefinderapp.presentation.coursedetails.CourseDetailsView"
+        android:label="CourseDetailsView">
+        <argument
+            android:name="courseId"
+            app:argType="integer" />
+        <argument
+            android:name="dataSource"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoriteView"
+        android:name="com.example.coursefinderapp.presentation.favorite.FavoriteView"
+        android:label="FavoriteView" />
 </navigation>

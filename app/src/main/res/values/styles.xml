@@ -5,6 +5,10 @@
         <item name="android:textSize">28sp</item>
     </style>
 
+    <style name="TextStyleHeadlineGrey" parent="TextStyleHeadline">
+        <item name = "android:textColor">@color/grey_text_color</item>
+    </style>
+
     <style name="TextStyleButton">
         <item name="fontFamily">@font/roboto_medium</item>
         <item name="textAllCaps">false</item>
@@ -12,6 +16,10 @@
 
     <style name="TextStyleButtonGreen" parent="TextStyleButton">
         <item name="android:textColor">@color/green_color_button_default</item>
+    </style>
+
+    <style name="TextStyleTitleLarge">
+        <item name="android:textSize">22sp</item>
     </style>
 
     <style name="TextStyleTitleMedium">
@@ -47,7 +55,16 @@
         <item name="android:textColor">@color/grey_text_color</item>
     </style>
 
-    <style name="TextStyleCapture">
+    <style name="TextStyleCaption">
         <item name="android:textSize">12sp</item>
     </style>
+
+    <style name="TextStyleCaptionGrey" parent="TextStyleCaption">
+        <item name="android:textColor">@color/grey_text_color</item>
+    </style>
+
+
+
+
+
 </resources>

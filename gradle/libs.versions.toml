@@ -10,6 +10,7 @@ activityCompose = "1.8.0"
 composeBom = "2024.04.01"
 material_version = "1.12.0"
 glide = "4.13.0"
+glideToVectorYou = "2.0.0"
 hilt = "2.51"
 hilt_work = "1.2.0"
 googleGmsGoogleServices = "4.4.2"
@@ -21,6 +22,7 @@ retrofit = "2.9.0"
 okhttp3 = "4.12.0"
 firebase_links = "22.1.0"
 paging = "3.3.4"
+androidsvg = "1.4"
 
 
 [libraries]
@@ -41,6 +43,9 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 material = { module = "com.google.android.material:material", version.ref = "material_version"}
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glide-annotations = { group = "com.github.bumptech.glide", name = "annotations", version.ref = "glide" }
+glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+glide-to-vector-you = { group = "com.github.corouteam", name = "GlideToVectorYou", version.ref = "glideToVectorYou" }
+#androidsvg = { group = "com.caverock", name = "androidsvg", version.ref = "androidsvg" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt_work" }

@@ -13,7 +13,7 @@ data class Course(
     val price: String?,
     val tags: List<Int>,
     val isPopular: Boolean,
+    val courseUrl: String?,
     val coverImage: String?,
-    val sections: List<Int>,
     val authors: List<Int>?
 )
