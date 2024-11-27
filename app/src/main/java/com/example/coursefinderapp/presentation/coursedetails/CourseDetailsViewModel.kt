@@ -1,12 +1,14 @@
 package com.example.coursefinderapp.presentation.coursedetails
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.coursefinderapp.domain.entity.Author
 import com.example.coursefinderapp.domain.entity.Course
 import com.example.coursefinderapp.domain.usecase.FetchAuthorUseCase
 import com.example.coursefinderapp.domain.usecase.FetchCourseUseCase
+import com.example.coursefinderapp.domain.usecase.SaveFavoriteCourseUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +21,8 @@ import javax.inject.Inject
 class CourseDetailsViewModel @Inject constructor(
     context: Application,
     private val fetchCourseUseCase: FetchCourseUseCase,
-    private val fetchAuthorUseCase: FetchAuthorUseCase
+    private val fetchAuthorUseCase: FetchAuthorUseCase,
+    private val saveFavoriteCourseUseCase: SaveFavoriteCourseUseCase
 ) : AndroidViewModel(context) {
 
     private val _viewState =
@@ -48,9 +51,9 @@ class CourseDetailsViewModel @Inject constructor(
         }
     }
 
-    fun setUpAuthor(course: Course) {
+    fun setUpAuthor(course: Course, dataSource: String) {
         viewModelScope.launch {
-            fetchAuthorUseCase.invoke(FetchAuthorUseCase.Params(course))
+            fetchAuthorUseCase.invoke(FetchAuthorUseCase.Params(course, dataSource))
                 .onStart {
                     _authorViewState.value = CourseDetailsViewState.Loading
                 }
@@ -62,5 +65,23 @@ class CourseDetailsViewModel @Inject constructor(
                     _authorViewState.value = CourseDetailsViewState.Success(it)
                 }
         }
+    }
+
+    fun saveCourseToFavorite(course: Course) {
+        viewModelScope.launch {
+            runCatching {
+                saveFavoriteCourseUseCase(
+                    SaveFavoriteCourseUseCase.Params(course)
+                )
+            }.onSuccess {
+                Log.d(TAG, "Course added to favorite successfully")
+            }.onFailure { e ->
+                Log.e(TAG, "Error saving course to favorite: ${e.message}")
+            }
+        }
+    }
+
+    companion object {
+        private const val TAG = "CourseDetailsViewModel"
     }
 }

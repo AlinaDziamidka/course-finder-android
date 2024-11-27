@@ -10,14 +10,14 @@
         android:orderInCategory="1" />
 
     <item
-        android:id="@+id/myGroupsView"
+        android:id="@+id/favoriteView"
         android:icon="@drawable/ic_favorites"
         android:title="@string/home_bottom_nav_favorites"
         app:titleTextAppearance="@style/TextStyleSmallButton"
         android:orderInCategory="2" />
 
     <item
-        android:id="@+id/competitionsView"
+        android:id="@+id/accountView"
         android:icon="@drawable/ic_account"
         android:title="@string/home_bottom_nav_account"
         app:titleTextAppearance="@style/TextStyleSmallButton"

@@ -46,6 +46,7 @@ class HomeView : AppCompatActivity() {
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.homeView -> navController.navigate(R.id.homeViewFragment)
+                R.id.favoriteView -> navController.navigate(R.id.favoriteView)
             }
             true
         }

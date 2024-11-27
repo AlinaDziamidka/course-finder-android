@@ -1,5 +1,6 @@
 package com.example.coursefinderapp.domain.usecase
 
+import android.util.Log
 import com.example.coursefinderapp.domain.entity.Course
 import com.example.coursefinderapp.domain.repository.local.CourseLocalRepository
 import com.example.coursefinderapp.domain.repository.local.cache.CourseCacheRepository
@@ -45,22 +46,28 @@ class FetchCourseUseCase @Inject constructor(
 
     private suspend fun loadFromCache(courseId: Int): Course {
         val courseFromCache = courseCacheRepository.fetchCourse(courseId).firstOrNull()
-        val courseFromRemoteStorage = loadFromRemoteStorage(courseId)
 
-        insertToCache(courseCacheRepository::saveCourse, courseId, courseFromRemoteStorage)
-
-        return courseFromCache ?: courseFromRemoteStorage
+        return if (courseFromCache == null) {
+            val courseFromRemoteStorage = loadFromRemoteStorage(courseId)
+            insertToCache(courseCacheRepository::saveCourse, courseId, courseFromRemoteStorage)
+            courseFromRemoteStorage
+        } else {
+            courseFromCache
+        }
     }
 
     private suspend fun loadFromDatabase(courseId: Int): Course {
         val courseFromDataBase = withContext(Dispatchers.IO) {
             courseLocalRepository.fetchById(courseId)
         }
-        val courseFromRemoteStorage = loadFromRemoteStorage(courseId)
 
-        insertToLocalDatabase(courseLocalRepository::insertOne,courseFromRemoteStorage)
-
-        return courseFromDataBase ?: courseFromRemoteStorage
+        return if (courseFromDataBase == null) {
+            val courseFromRemoteStorage = loadFromRemoteStorage(courseId)
+            insertToLocalDatabase(courseLocalRepository::insertOne, courseFromRemoteStorage)
+            courseFromRemoteStorage
+        } else {
+            courseFromDataBase
+        }
     }
 
 

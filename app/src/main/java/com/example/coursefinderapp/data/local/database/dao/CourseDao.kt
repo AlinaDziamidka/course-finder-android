@@ -13,6 +13,9 @@ interface CourseDao {
     @Query("SELECT * FROM course")
     fun fetchAll(): List<CourseModel>
 
+    @Query("SELECT id FROM course")
+    fun getAllIds(): List<Int>
+
     @Query("SELECT * FROM course WHERE id = :courseId LIMIT 1")
     fun fetchById(courseId: Int): CourseModel?
 

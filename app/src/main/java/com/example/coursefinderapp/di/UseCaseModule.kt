@@ -10,6 +10,7 @@ import com.example.coursefinderapp.domain.repository.remote.SessionRepository
 import com.example.coursefinderapp.domain.usecase.FetchAuthorUseCase
 import com.example.coursefinderapp.domain.usecase.FetchCourseUseCase
 import com.example.coursefinderapp.domain.usecase.FetchCoursesUseCase
+import com.example.coursefinderapp.domain.usecase.FetchFavoriteCoursesUseCase
 import com.example.coursefinderapp.domain.usecase.SaveCourseToCacheUseCase
 import com.example.coursefinderapp.domain.usecase.SaveFavoriteCourseUseCase
 
@@ -39,8 +40,11 @@ object UseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun provideFetchCoursesUseCase(repository: CourseRemoteRepository): FetchCoursesUseCase {
-        return FetchCoursesUseCase(repository)
+    fun provideFetchCoursesUseCase(
+        courseRemoteRepository: CourseRemoteRepository,
+        courseLocalRepository: CourseLocalRepository
+    ): FetchCoursesUseCase {
+        return FetchCoursesUseCase(courseRemoteRepository, courseLocalRepository)
     }
 
     @Provides
@@ -56,7 +60,11 @@ object UseCaseModule {
         courseCacheRepository: CourseCacheRepository,
         courseLocalRepository: CourseLocalRepository
     ): FetchCourseUseCase {
-        return FetchCourseUseCase(courseRemoteRepository, courseCacheRepository, courseLocalRepository)
+        return FetchCourseUseCase(
+            courseRemoteRepository,
+            courseCacheRepository,
+            courseLocalRepository
+        )
     }
 
     @Provides
@@ -66,7 +74,11 @@ object UseCaseModule {
         authorCacheRepository: AuthorCacheRepository,
         authorLocalRepository: AuthorLocalRepository
     ): FetchAuthorUseCase {
-        return FetchAuthorUseCase(authorRemoteRepository, authorCacheRepository, authorLocalRepository)
+        return FetchAuthorUseCase(
+            authorRemoteRepository,
+            authorCacheRepository,
+            authorLocalRepository
+        )
     }
 
     @Provides
@@ -82,4 +94,12 @@ object UseCaseModule {
             authorLocalRepository
         )
     }
+
+    @Provides
+    @ViewModelScoped
+    fun provideFetchFavoriteCoursesUseCase(repository: CourseLocalRepository): FetchFavoriteCoursesUseCase {
+        return FetchFavoriteCoursesUseCase(repository)
+    }
+
+
 }

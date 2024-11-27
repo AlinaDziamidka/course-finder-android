@@ -1,5 +1,6 @@
 package com.example.coursefinderapp.domain.usecase
 
+import android.util.Log
 import com.example.coursefinderapp.domain.entity.Author
 import com.example.coursefinderapp.domain.entity.Course
 import com.example.coursefinderapp.domain.repository.local.AuthorLocalRepository
@@ -37,9 +38,11 @@ class FetchAuthorUseCase @Inject constructor(
             null
         }
 
+        Log.d("FetchAuthorUseCase", "$dataSource")
+
         val author = when (dataSource) {
             DataSource.CACHE -> loadFromCache(courseId, authorId)
-            DataSource.DATABASE -> loadFromDatabase(courseId)
+            DataSource.DATABASE -> loadFromDatabase(authorId)
             else -> loadFromRemoteStorage(authorId)
         }
         emit(author)
@@ -47,26 +50,32 @@ class FetchAuthorUseCase @Inject constructor(
 
     private suspend fun loadFromCache(courseId: Int, authorId: Int): Author {
         val authorFromCache = authorCacheRepository.fetchAuthorByCourseId(courseId).firstOrNull()
-        val authorFromRemoteStorage = loadFromRemoteStorage(authorId)
 
-        insertToCache(
-            authorCacheRepository::saveCourseAuthor,
-            courseId,
+        return if (authorFromCache == null) {
+            val authorFromRemoteStorage = loadFromRemoteStorage(authorId)
+            insertToCache(
+                authorCacheRepository::saveCourseAuthor,
+                courseId,
+                authorFromRemoteStorage
+            )
             authorFromRemoteStorage
-        )
-
-        return authorFromCache ?: authorFromRemoteStorage
+        } else {
+            authorFromCache
+        }
     }
 
     private suspend fun loadFromDatabase(authorId: Int): Author {
         val authorFromDataBase = withContext(Dispatchers.IO) {
             authorLocalRepository.fetchById(authorId)
         }
-        val authorFromRemoteStorage = loadFromRemoteStorage(authorId)
 
-        insertToLocalDatabase(authorLocalRepository::insertOne, authorFromRemoteStorage)
-
-        return authorFromDataBase ?: authorFromRemoteStorage
+        return if (authorFromDataBase == null) {
+            val authorFromRemoteStorage = loadFromRemoteStorage(authorId)
+            insertToLocalDatabase(authorLocalRepository::insertOne, authorFromRemoteStorage)
+            authorFromRemoteStorage
+        } else {
+            authorFromDataBase
+        }
     }
 
 

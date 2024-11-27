@@ -19,6 +19,8 @@ class CourseLocalRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getAllIds(): List<Int> = courseDao.getAllIds()
+
     override suspend fun fetchById(courseId: Int): Course? {
         val model = courseDao.fetchById(courseId)
         return if (model != null) {

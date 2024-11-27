@@ -29,5 +29,9 @@
     <fragment
         android:id="@+id/favoriteView"
         android:name="com.example.coursefinderapp.presentation.favorite.FavoriteView"
-        android:label="FavoriteView" />
+        android:label="FavoriteView" >
+        <action
+            android:id="@+id/action_favoriteView_to_courseDetailsView"
+            app:destination="@id/courseDetailsView" />
+    </fragment>
 </navigation>

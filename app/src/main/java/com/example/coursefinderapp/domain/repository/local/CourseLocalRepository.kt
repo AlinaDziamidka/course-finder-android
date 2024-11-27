@@ -6,6 +6,8 @@ interface CourseLocalRepository {
 
     suspend fun fetchAll(): List<Course>
 
+    suspend fun getAllIds(): List<Int>
+
     suspend fun fetchById(courseId: Int): Course?
 
     suspend fun insertOne(course: Course)

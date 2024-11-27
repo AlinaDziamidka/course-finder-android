@@ -37,10 +37,12 @@ class SaveFavoriteCourseUseCase @Inject constructor(
     }
 
     private suspend fun setAuthor(authorId: Int?) {
+        Log.d(TAG, "author id: $authorId")
         if (authorId != null) {
             val event = authorRemoteRepository.fetchAuthorById(authorId)
 
             if (event is Event.Success) {
+                Log.d(TAG, "author: ${event.data}")
                 withContext(Dispatchers.IO) {
                     authorLocalRepository.insertOne(event.data)
                 }

@@ -235,7 +235,7 @@ class HomeViewFragment : Fragment() {
 
     companion object {
         private const val TAG = "HomeViewFragment"
-        const val OBSERVE = "coursesObserver"
+        private const val OBSERVE = "coursesObserver"
     }
 }
 
