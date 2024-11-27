@@ -11,11 +11,13 @@ import com.example.coursefinderapp.domain.usecase.FetchAuthorUseCase
 import com.example.coursefinderapp.domain.usecase.FetchCourseUseCase
 import com.example.coursefinderapp.domain.usecase.FetchCoursesUseCase
 import com.example.coursefinderapp.domain.usecase.FetchFavoriteCoursesUseCase
+import com.example.coursefinderapp.domain.usecase.FetchStartedCoursesUseCase
 import com.example.coursefinderapp.domain.usecase.SaveCourseToCacheUseCase
 import com.example.coursefinderapp.domain.usecase.SaveFavoriteCourseUseCase
 
 import com.example.coursefinderapp.domain.usecase.SignInUseCase
 import com.example.coursefinderapp.domain.usecase.SignUpUseCase
+import com.example.coursefinderapp.domain.usecase.StartCourseUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -101,5 +103,15 @@ object UseCaseModule {
         return FetchFavoriteCoursesUseCase(repository)
     }
 
+    @Provides
+    @ViewModelScoped
+    fun provideStartCourseUseCase(repository: CourseLocalRepository): StartCourseUseCase {
+        return StartCourseUseCase(repository)
+    }
 
+    @Provides
+    @ViewModelScoped
+    fun provideFetchUserCoursesUseCase(repository: CourseLocalRepository): FetchStartedCoursesUseCase {
+        return FetchStartedCoursesUseCase(repository)
+    }
 }

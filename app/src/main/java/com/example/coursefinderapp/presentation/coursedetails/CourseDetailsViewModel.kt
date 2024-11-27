@@ -9,6 +9,7 @@ import com.example.coursefinderapp.domain.entity.Course
 import com.example.coursefinderapp.domain.usecase.FetchAuthorUseCase
 import com.example.coursefinderapp.domain.usecase.FetchCourseUseCase
 import com.example.coursefinderapp.domain.usecase.SaveFavoriteCourseUseCase
+import com.example.coursefinderapp.domain.usecase.StartCourseUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +23,8 @@ class CourseDetailsViewModel @Inject constructor(
     context: Application,
     private val fetchCourseUseCase: FetchCourseUseCase,
     private val fetchAuthorUseCase: FetchAuthorUseCase,
-    private val saveFavoriteCourseUseCase: SaveFavoriteCourseUseCase
+    private val saveFavoriteCourseUseCase: SaveFavoriteCourseUseCase,
+    private val startCourseUseCase: StartCourseUseCase
 ) : AndroidViewModel(context) {
 
     private val _viewState =
@@ -77,6 +79,20 @@ class CourseDetailsViewModel @Inject constructor(
                 Log.d(TAG, "Course added to favorite successfully")
             }.onFailure { e ->
                 Log.e(TAG, "Error saving course to favorite: ${e.message}")
+            }
+        }
+    }
+
+    fun startCourse(course: Course) {
+        viewModelScope.launch {
+            runCatching {
+                startCourseUseCase(
+                    StartCourseUseCase.Params(course)
+                )
+            }.onSuccess {
+                Log.d(TAG, "Course started successfully")
+            }.onFailure { e ->
+                Log.e(TAG, "Error starting course: ${e.message}")
             }
         }
     }

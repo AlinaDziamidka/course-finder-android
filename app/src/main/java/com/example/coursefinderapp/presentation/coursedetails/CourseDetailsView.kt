@@ -59,6 +59,7 @@ class CourseDetailsView : Fragment(R.layout.fragment_course_details) {
     private lateinit var authorNameView: TextView
     private lateinit var moveToPlatformAction: MaterialButton
     private lateinit var courseDescriptionView: TextView
+    private lateinit var startCourseAction: MaterialButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,6 +92,7 @@ class CourseDetailsView : Fragment(R.layout.fragment_course_details) {
         authorNameView = binding.authorNameView
         moveToPlatformAction = binding.moveToPlatformActionView
         courseDescriptionView = binding.aboutCourseContent
+        startCourseAction = binding.startCourseActionView
     }
 
     private fun setFABSize() {
@@ -153,6 +155,7 @@ class CourseDetailsView : Fragment(R.layout.fragment_course_details) {
         setCourseImage(course.coverImage)
         setMoveToPlatformAction(course.courseUrl)
         setAddToFavoriteAction(course)
+        setStartCourseAction(course)
     }
 
     private fun setUpAuthor(course: Course) {
@@ -275,6 +278,12 @@ class CourseDetailsView : Fragment(R.layout.fragment_course_details) {
     private fun openUrlInBrowser(url: String?) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(intent)
+    }
+
+    private fun setStartCourseAction(course: Course) {
+        startCourseAction.setOnClickListener {
+            viewModel.startCourse(course)
+        }
     }
 
     private fun setAddToFavoriteAction(course: Course) {

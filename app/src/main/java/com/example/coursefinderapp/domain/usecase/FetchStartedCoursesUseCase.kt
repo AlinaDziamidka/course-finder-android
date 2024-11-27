@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class FetchFavoriteCoursesUseCase @Inject constructor(
+class FetchStartedCoursesUseCase @Inject constructor(
     private val courseLocalRepository: CourseLocalRepository
 ) : UseCase<Unit, List<Course>> {
 
@@ -17,8 +17,8 @@ class FetchFavoriteCoursesUseCase @Inject constructor(
         val courses = withContext(Dispatchers.IO) {
             courseLocalRepository.fetchAll()
         }
-        val favoriteCourses = courses.filter { course -> course.isFavorite }
+        val startedCourses = courses.filter { course -> course.isStarted }
 
-        emit(favoriteCourses)
+       emit(startedCourses)
     }
 }

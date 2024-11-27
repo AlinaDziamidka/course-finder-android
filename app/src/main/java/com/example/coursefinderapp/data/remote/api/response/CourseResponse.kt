@@ -21,6 +21,8 @@ data class CourseResponse(
     val isPopular: Boolean,
     @SerializedName("canonical_url")
     val courseUrl: String?,
+    @SerializedName("lessons_count")
+    val lessonCount: Int?,
     @SerializedName("review_summary")
     val reviewSummary: Int?,
     @SerializedName("cover")

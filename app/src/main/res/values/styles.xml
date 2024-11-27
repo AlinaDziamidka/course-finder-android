@@ -63,7 +63,9 @@
         <item name="android:textColor">@color/grey_text_color</item>
     </style>
 
-
+    <style name="TextStyleCaptionGreen" parent="TextStyleCaption">
+        <item name="android:textColor">@color/green_color_button_pressed</item>
+    </style>
 
 
 

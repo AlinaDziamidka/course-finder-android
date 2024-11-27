@@ -24,9 +24,10 @@ class SaveFavoriteCourseUseCase @Inject constructor(
     override suspend fun invoke(params: Params) {
         val course = params.course
         val authorId = params.course.authors?.first()
+        val favoriteCourse = course.copy(isFavorite = true)
 
         withContext(Dispatchers.IO) {
-            courseLocalRepository.insertOne(course)
+            courseLocalRepository.insertOne(favoriteCourse)
         }
 
         try {

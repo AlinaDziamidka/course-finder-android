@@ -8,9 +8,16 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.coursefinderapp.R
+import com.example.coursefinderapp.data.remote.worker.FetchStepikTokenWorker
+import com.example.coursefinderapp.data.remote.worker.SyncWorker
 import com.example.coursefinderapp.databinding.ActivityHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class HomeView : AppCompatActivity() {
@@ -25,6 +32,7 @@ class HomeView : AppCompatActivity() {
         createNavController()
         setBottomNavigation()
         onBackPressedAction()
+        runWorker()
     }
 
     private fun setContent() {
@@ -47,6 +55,7 @@ class HomeView : AppCompatActivity() {
             when (it.itemId) {
                 R.id.homeView -> navController.navigate(R.id.homeViewFragment)
                 R.id.favoriteView -> navController.navigate(R.id.favoriteView)
+                R.id.account -> navController.navigate(R.id.accountView)
             }
             true
         }
@@ -65,5 +74,17 @@ class HomeView : AppCompatActivity() {
             }
         }
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+    }
+
+    private fun runWorker() {
+        val workRequest = PeriodicWorkRequestBuilder<SyncWorker>(
+            1, TimeUnit.DAYS
+        )
+            .build()
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "SyncCoursesWork",
+            ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
     }
 }

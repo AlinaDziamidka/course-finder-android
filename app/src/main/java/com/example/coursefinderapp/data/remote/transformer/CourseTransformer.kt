@@ -25,6 +25,9 @@ class CourseTransformer {
                 price = course.price,
                 tags = course.tags,
                 isPopular = course.isPopular,
+                lessonCount = course.lessonCount,
+                isFavorite = false,
+                isStarted = false,
                 courseUrl = course.courseUrl,
                 coverImage = course.coverImage,
                 authors = course.authors

@@ -19,6 +19,9 @@ class CourseTransformer {
             isPopular = model.isPopular,
             courseUrl = model.courseUrl,
             coverImage = model.image,
+            lessonCount = model.lessonCount,
+            isFavorite = model.isFavorite,
+            isStarted = model.isStarted,
             authors = model.authors
         )
     }
@@ -37,6 +40,9 @@ class CourseTransformer {
             isPopular = course.isPopular,
             courseUrl = course.courseUrl,
             image = course.coverImage,
+            lessonCount = course.lessonCount,
+            isFavorite = course.isFavorite,
+            isStarted = course.isStarted,
             authors = course.authors
         )
     }

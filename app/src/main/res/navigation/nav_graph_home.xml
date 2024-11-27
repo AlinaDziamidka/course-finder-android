@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_homeViewFragment_to_favoriteView"
             app:destination="@id/favoriteView" />
+        <action
+            android:id="@+id/action_homeViewFragment_to_accountView"
+            app:destination="@id/accountView" />
     </fragment>
     <fragment
         android:id="@+id/courseDetailsView"
@@ -34,4 +37,8 @@
             android:id="@+id/action_favoriteView_to_courseDetailsView"
             app:destination="@id/courseDetailsView" />
     </fragment>
+    <fragment
+        android:id="@+id/accountView"
+        android:name="com.example.coursefinderapp.presentation.account.AccountView"
+        android:label="AccountView" />
 </navigation>

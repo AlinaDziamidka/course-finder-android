@@ -26,6 +26,12 @@ data class CourseModel(
     val tags: List<Int>,
     @ColumnInfo("review_summary")
     val reviewSummary: Int?,
+    @ColumnInfo("lessons_count")
+    val lessonCount: Int?,
+    @ColumnInfo("is_favorite")
+    val isFavorite: Boolean,
+    @ColumnInfo("is_started")
+    val isStarted: Boolean,
     @ColumnInfo("is_popular")
     val isPopular: Boolean,
     @ColumnInfo("course_url")

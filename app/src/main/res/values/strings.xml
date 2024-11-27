@@ -64,8 +64,16 @@
     <string name="load_state_footer_error">Произошла ошибка</string>
     <string name="load_state_footer_retry">Повторить</string>
     <string name="course_details_author">Автор</string>
-    <string name="course_details_start_course">Начать крус</string>
+    <string name="course_details_start_course">Начать курс</string>
     <string name="course_details_to_platform">Перейти на платформу</string>
     <string name="course_details_about_course">О курсе</string>
     <string name="favorite_header">Избранное</string>
+    <string name="account_header">Профиль</string>
+    <string name="account_write_to_support">Написать в поддержку</string>
+    <string name="account_settings">Настройки</string>
+    <string name="account_log_out">Выйти из аккаунта</string>
+    <string name="account_your_courses">Ваши курсы</string>
+    <string name="account_progress_percent">%1$d%%</string>
+    <string name="account_lesson_divider">/</string>
+    <string name="account_lesson_count">%1$s% уроков</string>
 </resources>

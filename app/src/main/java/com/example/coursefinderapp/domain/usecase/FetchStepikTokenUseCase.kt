@@ -1,7 +1,5 @@
 package com.example.coursefinderapp.domain.usecase
 
-
-import com.example.coursefinderapp.domain.repository.remote.SessionRepository
 import com.example.coursefinderapp.domain.repository.remote.StepikAuthRepository
 import com.example.coursefinderapp.domain.util.Event
 import kotlinx.coroutines.Dispatchers
