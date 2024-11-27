@@ -1,6 +1,5 @@
 package com.example.coursefinderapp.domain.util
 
-import ApiError
 
 sealed class Event<out T : Any> {
     data class Success<out T : Any>(val data: T) : Event<T>()

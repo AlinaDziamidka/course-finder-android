@@ -4,11 +4,11 @@ sealed class Filters {
 
     data class Category(val type: Type) : Filters() {
         enum class Type(val code: Int) {
-            PYTHON(3),
-            C_SHARP(4),
-            C(5),
-            JAVA(6),
-            KOTLIN(8)
+            PYTHON(PYTHON_TAG),
+            C_SHARP(C_SHARP_TAG),
+            C(C_TAG),
+            JAVA(JAVA_TAG),
+            KOTLIN(KOTLIN_TAG)
         }
     }
 

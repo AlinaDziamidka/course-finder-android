@@ -59,42 +59,33 @@ class SignInView : Fragment() {
     }
 
     private fun setUpViews() {
-        Log.d("SignInView", "setUpViews: Setting up button click listener")
         signInAction.setOnClickListener {
             viewModel.onSignInButtonClicked(
                 username = username.text.toString(),
                 password = password.text.toString(),
             )
-            Log.d("SignInView", "Sign-in button clicked with username: $username and password: $password")
         }
     }
 
     private fun observeEvents() {
-        Log.d("SignInView", "observeEvents: Observing view state")
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.viewState.collect {
-                    Log.d("SignInView", "View state updated: $it")
                     when (it) {
                         is SignInViewState.Success -> {
-                            Log.d("SignInView", "Sign-in successful")
                             handleOnSuccess()
                         }
 
                         is SignInViewState.Loading -> {
-                            Log.d("SignInView", "Loading state: Showing progress overlay")
                             progressOverlay.visibility = View.VISIBLE
                             signInAction.isEnabled = false
                         }
 
                         is SignInViewState.Failure -> {
-                            Log.d("SignInView", "Sign-in failed: Handling failure")
                             handleOnFailure()
                         }
 
-                        is SignInViewState.Idle -> {
-                            Log.d("SignInView", "Idle state")
-                        }
+                        is SignInViewState.Idle -> {}
                     }
                 }
             }
@@ -102,13 +93,11 @@ class SignInView : Fragment() {
     }
 
     private fun handleOnSuccess() {
-        Log.d("SignInView", "handleOnSuccess: Navigating to home screen")
         moveToHomeScreen()
         progressOverlay.visibility = View.GONE
     }
 
     private fun handleOnFailure() {
-        Log.d("SignInView", "handleOnFailure: Showing failure notification")
         signInAction.isEnabled = true
         progressOverlay.visibility = View.GONE
         showFailureNotification()
@@ -119,7 +108,6 @@ class SignInView : Fragment() {
     }
 
     private fun moveToHomeScreen() {
-        Log.d("SignInView", "moveToHomeScreen: Navigate to home screen logic")
         val action = SignInViewDirections.actionSignInViewToHomeView()
         findNavController().navigate(action)
     }

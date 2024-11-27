@@ -109,10 +109,10 @@ class FavoriteAdapter(
             course: Course,
             context: Context
         ) {
-            val rating = if (course.rating?.compareTo(0.0f) == 0) {
-                context.getString(R.string.home_no_rating)
-            } else {
-                String.format(Locale.US, "%.1f", course.rating)
+            val rating = when {
+                course.rating == null -> context.getString(R.string.home_no_rating)
+                course.rating.compareTo(0.0f) == 0 -> context.getString(R.string.home_no_rating)
+                else -> String.format(Locale.US, "%.1f", course.rating)
             }
             ratingView.text = rating
         }

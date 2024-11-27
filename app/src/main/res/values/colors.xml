@@ -22,4 +22,5 @@
     <color name="orange_color_ok_action_pressed">#E55F00</color>
     <color name="dark_grey">#24252A</color>
     <color name="grey_text_color">#B3F2F2F3</color>
+    <color name="shimmerColor">#C2C2C2</color>
 </resources>

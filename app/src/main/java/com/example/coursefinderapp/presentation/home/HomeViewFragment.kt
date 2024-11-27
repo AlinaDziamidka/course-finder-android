@@ -94,17 +94,11 @@ class HomeViewFragment : Fragment() {
                 }.collectLatest { (pagingData, state) ->
                     handleOnSuccess(pagingData)
                     when (state) {
-                        is HomeViewState.Success -> {
-                            Log.d(OBSERVE, "Success to fetch courses: ${state.data}")
-                        }
+                        is HomeViewState.Success -> {}
 
-                        is HomeViewState.Loading -> {
-                            Log.d(OBSERVE, "Loading fetching courses")
-                        }
+                        is HomeViewState.Loading -> {}
 
-                        is HomeViewState.Failure -> {
-                            Log.d(OBSERVE, "Failed to fetch courses: ${state.message}")
-                        }
+                        is HomeViewState.Failure -> {}
                     }
                 }
             }
@@ -231,11 +225,6 @@ class HomeViewFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        private const val TAG = "HomeViewFragment"
-        private const val OBSERVE = "coursesObserver"
     }
 }
 

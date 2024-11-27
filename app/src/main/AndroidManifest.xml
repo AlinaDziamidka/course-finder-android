@@ -32,7 +32,8 @@
         <activity
             android:name=".presentation.onboarding.OnboardingView"
             android:exported="true"
-            android:theme="@style/Theme.CourseFinderApp">
+            android:theme="@style/Theme.CourseFinderApp"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -42,39 +43,15 @@
         <activity
             android:name=".presentation.signup.SignUpView"
             android:exported="true"
-            android:theme="@style/Theme.CourseFinderApp">
-
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            android:theme="@style/Theme.CourseFinderApp"
+            android:screenOrientation="portrait">
         </activity>
-
-<!--        <activity-->
-<!--            android:name=".presentation.signin.AuthRedirectActivity"-->
-<!--            android:exported="true">-->
-
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <category android:name="android.intent.category.BROWSABLE" />-->
-<!--                <data-->
-<!--                    android:scheme="https"-->
-<!--                    android:host="coursefinderapp.page.link"-->
-<!--                    android:pathPrefix="/authstepic" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
-
 
         <activity
             android:name=".presentation.home.HomeView"
             android:exported="true"
-            android:theme="@style/Theme.CourseFinderApp">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            android:theme="@style/Theme.CourseFinderApp"
+            android:screenOrientation="portrait">
 
         </activity>
 

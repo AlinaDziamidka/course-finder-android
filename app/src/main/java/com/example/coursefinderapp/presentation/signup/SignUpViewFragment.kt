@@ -110,28 +110,22 @@ class SignUpViewFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.viewState.collect {
-                    Log.d("SignUpView", "View state updated: $it")
                     when (it) {
                         is SignUpViewState.Success -> {
-                            Log.d("SignUpView", "Sign-in successful")
                             handleOnSuccess()
                         }
 
                         is SignUpViewState.Loading -> {
-                            Log.d("SignUpView", "Loading state: Showing progress overlay")
                             signUpAction.isEnabled = false
                             progressOverlay.visibility + View.VISIBLE
                         }
 
                         is SignUpViewState.Failure -> {
-                            Log.d("SignUpView", "Sign-in failed: Handling failure")
                             signUpAction.isEnabled = true
                             progressOverlay.visibility = View.GONE
                         }
 
-                        is SignUpViewState.Idle -> {
-                            Log.d("SignUpView", "Idle state")
-                        }
+                        is SignUpViewState.Idle -> {}
                     }
                 }
             }
@@ -143,29 +137,29 @@ class SignUpViewFragment : Fragment() {
         progressOverlay.visibility + View.GONE
     }
 
-    private fun handleSignUpFailure(failure: SignUpUseCase.SignUpFailure) {
+    private fun handleSignUpFailure(failure: SignUpFailure) {
         when (failure) {
-            is SignUpUseCase.SignUpFailure.UsernameExistFailure -> {
+            is SignUpFailure.UsernameExistFailure -> {
                 showUsernameExistFailure()
             }
 
-            is SignUpUseCase.SignUpFailure.UserNameFailure -> {
+            is SignUpFailure.UserNameFailure -> {
                 showUsernameFailure()
             }
 
-            is SignUpUseCase.SignUpFailure.PasswordFailure -> {
+            is SignUpFailure.PasswordFailure -> {
                 showPasswordFailure()
             }
 
-            is SignUpUseCase.SignUpFailure.ConfirmPasswordFailure -> {
+            is SignUpFailure.ConfirmPasswordFailure -> {
                 showConfirmPasswordFailure()
             }
 
-            is SignUpUseCase.SignUpFailure.EmptyUsernameFailure -> {
+            is SignUpFailure.EmptyUsernameFailure -> {
                 showEmptyUsernameFailure()
             }
 
-            is SignUpUseCase.SignUpFailure.EmptyConfirmPasswordFailure -> {
+            is SignUpFailure.EmptyConfirmPasswordFailure -> {
                 showEmptyConfirmPasswordFailure()
             }
         }

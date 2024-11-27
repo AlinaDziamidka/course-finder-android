@@ -1,7 +1,5 @@
 package com.example.coursefinderapp.di
 
-import com.example.coursefinderapp.data.local.cache.AuthorCache
-import com.example.coursefinderapp.data.local.cache.AuthorCacheImpl
 import com.example.coursefinderapp.data.remote.api.NetworkClientConfig.BASE_URL_STEPIK
 import com.example.coursefinderapp.data.remote.api.service.AuthorApiService
 import com.example.coursefinderapp.data.remote.api.service.CourseApiService

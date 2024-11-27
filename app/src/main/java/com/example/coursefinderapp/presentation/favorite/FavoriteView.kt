@@ -17,7 +17,9 @@ import com.example.coursefinderapp.databinding.FragmentFavoriteBinding
 import com.example.coursefinderapp.domain.entity.Course
 import com.example.coursefinderapp.domain.util.DataSource
 import com.example.coursefinderapp.presentation.favorite.adapter.FavoriteAdapter
+import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -28,6 +30,7 @@ class FavoriteView : Fragment() {
     private val binding get() = _binding!!
     private lateinit var adapter: FavoriteAdapter
     private lateinit var coursesView: RecyclerView
+    private lateinit var shimmerLayout: ShimmerFrameLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +53,7 @@ class FavoriteView : Fragment() {
 
     private fun initViews() {
         coursesView = binding.coursesRecyclerView
+        shimmerLayout = binding.shimmerLayout
     }
 
     private fun initAdapter() {
@@ -77,16 +81,16 @@ class FavoriteView : Fragment() {
                 viewModel.viewState.collect {
                     when (it) {
                         is FavoriteViewState.Success -> {
-                            Log.d(OBSERVE, "Success to fetch courses: ${it.data}")
                             handleOnSuccess(it.data)
                         }
 
                         is FavoriteViewState.Loading -> {
-                            Log.d(OBSERVE, "Loading fetching courses")
+                            delay(1000)
+                            startShimmer(shimmerLayout, coursesView)
                         }
 
                         is FavoriteViewState.Failure -> {
-                            Log.d(OBSERVE, "Failed to fetch courses: ${it}.message}")
+                            handleOnFailure()
                         }
                     }
                 }
@@ -94,8 +98,25 @@ class FavoriteView : Fragment() {
         }
     }
 
+    private fun startShimmer(shimmerLayout: ShimmerFrameLayout, view: View) {
+        shimmerLayout.startShimmer()
+        shimmerLayout.visibility = View.VISIBLE
+        view.visibility = View.GONE
+    }
+
     private fun handleOnSuccess(courses: List<Course>) {
         adapter.setCourses(courses.toMutableList())
+        stopShimmer(shimmerLayout, coursesView)
+    }
+
+    private fun stopShimmer(shimmerLayout: ShimmerFrameLayout, view: View) {
+        shimmerLayout.stopShimmer()
+        shimmerLayout.visibility = View.GONE
+        view.visibility = View.VISIBLE
+    }
+
+    private fun handleOnFailure() {
+        stopShimmer(shimmerLayout, coursesView)
     }
 
     private fun onFavoriteClick(course: Course) {
@@ -115,10 +136,5 @@ class FavoriteView : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        private const val TAG = "FavoriteView"
-        private const val OBSERVE = "coursesObserver"
     }
 }

@@ -1,7 +1,6 @@
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import org.json.JSONObject
 
 data class ApiError(
     @SerializedName("code")

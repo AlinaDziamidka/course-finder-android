@@ -1,19 +1,15 @@
 package com.example.coursefinderapp.presentation.home
 
 import android.os.Bundle
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.view.WindowManager
+
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.coursefinderapp.R
-import com.example.coursefinderapp.data.remote.worker.FetchStepikTokenWorker
 import com.example.coursefinderapp.data.remote.worker.SyncWorker
 import com.example.coursefinderapp.databinding.ActivityHomeBinding
 import dagger.hilt.android.AndroidEntryPoint

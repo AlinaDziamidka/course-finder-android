@@ -27,10 +27,29 @@
         android:layout_marginTop="32dp"
         android:text="@string/account_your_courses" />
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:shimmer_duration="1000">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/course_card_shimmer" />
+            <include layout="@layout/course_card_shimmer" />
+            <include layout="@layout/course_card_shimmer" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/coursesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        tools:listitem="@layout/user_course_card" />
+        tools:listitem="@layout/user_course_card"
+        android:visibility="gone"/>
 </LinearLayout>

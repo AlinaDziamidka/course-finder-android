@@ -1,6 +1,5 @@
 package com.example.coursefinderapp.domain.entity
 
-import com.google.gson.annotations.SerializedName
 
 data class Course(
     val id: Int,

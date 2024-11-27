@@ -8,10 +8,3 @@ plugins {
     alias(libs.plugins.navigation.safe.args) apply false
 }
 
-//allprojects {
-//    repositories {
-//        google()
-//        mavenCentral()
-//    }
-//}
-
